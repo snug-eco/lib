@@ -139,6 +139,32 @@ lab heap/copy
 
     ret
 
+; (*chunk -- ) IO
+lab heap/print
+    dup
+    jsr heap/len
+
+lab heap/loop
+    dup
+    lit 0
+    equ
+    jcn heap/done
+    lit 1
+    sub
+    swp
+    dup
+    lda
+    dbg
+    inc
+    swp
+    jmp heap/loop
+
+lab heap/done
+    pop
+    pop
+    ret
+
+
 
 
 
