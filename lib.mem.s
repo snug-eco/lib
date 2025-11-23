@@ -43,7 +43,6 @@ lab mem/cpy/loop
     jmp mem/cpy/loop
 
 lab mem/cpy/done
-    pop
     ret
 
 
