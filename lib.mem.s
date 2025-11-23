@@ -16,12 +16,14 @@ lab mem/cpy
 lab mem/cpy/loop
     ;loop check
     ldv _n
-    dup
     lit 0
     equ
     jcn mem/cpy/done
+
+    ;count down
+    ldv _n
     lit 1
-    sub ;count down
+    sub 
     stv _n
 
     ;read from src
@@ -41,6 +43,7 @@ lab mem/cpy/loop
     jmp mem/cpy/loop
 
 lab mem/cpy/done
+    pop
     ret
 
 
@@ -55,12 +58,14 @@ lab mem/set
 lab mem/set/loop
     ;loop check
     ldv _n
-    dup
     lit 0
     equ
     jcn mem/set/done
+
+    ;count down
+    ldv _n
     lit 1
-    sub ;count down
+    sub 
     stv _n
 
     ldv _char
