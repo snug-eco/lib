@@ -102,6 +102,8 @@ lab heap/new/done
 
 ; (*chunk -- )
 lab heap/void
+    lit 1
+    sub
     dup
     lda
     lit 0
