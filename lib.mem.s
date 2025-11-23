@@ -44,7 +44,7 @@ lab mem/cpy/done
     ret
 
 
-var char
+var _char
 
 ;(dst* char n -- )
 lab mem/set
