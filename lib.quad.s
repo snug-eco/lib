@@ -70,6 +70,7 @@ lab quad/comp/do
 
 ; (a*)
 lab quad/inc
+lab quad/increment
     stv _a
 
     jsr quad/inc/do
@@ -96,7 +97,8 @@ lab quad/inc/do
     dup
     lda
     inc
-    stv
+    swp
+    sta
 
     ;compare
     lda
