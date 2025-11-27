@@ -57,14 +57,15 @@ lab line/bound
     jmp line/loop
 
 lab line/backspace
+    ; key code don't care
+    pop
+
     ; skip backspace if buffer empty
     ldv _n
     lit 0
     equ
     jcn line/loop
 
-    ; key code don't care
-    pop
     ; erase chracter
     lit 8
     out
