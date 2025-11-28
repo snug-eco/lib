@@ -29,6 +29,26 @@ lab string/newline
     ret
 
 
+; (*a -- len)
+lab string/len
+    dup
+
+lab string/len/loop
+    dup
+    lda
+    lit 0
+    equ
+    jcn string/len/done
+
+    inc
+    jmp string/len/loop
+
+lab string/len/done
+    swp
+    sub
+    ret
+
+
 
 
 var _delim
