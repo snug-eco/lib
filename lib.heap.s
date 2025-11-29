@@ -30,10 +30,12 @@ lab heap/debug
     ret
 
 
+
 ; (size -- chunk*)
 lab heap/new
-    lit 78
-    out
+    ldv _heap_debug
+    jcn heap/new/debug-start
+lab heap/new/debug-continue
     ; the requested sized only refers to the content of the chunk.
     ; so the true size of the chunk is computed by adding one,
     ; for the size header.
@@ -108,16 +110,20 @@ lab heap/new/done
     inc
 
     ldv _heap_debug
-    jcn heap/new/debug
+    jcn heap/new/debug-complete
     ret
 
-lab heap/new/debug
+lab heap/new/debug-complete
     lit 33
     out
     dup
     dbg
     ret
 
+lab heap/new/debug-start
+    lit 78
+    out
+    jmp heap/new/debug-continue
 
 
 ; (*chunk -- )
