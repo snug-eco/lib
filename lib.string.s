@@ -111,4 +111,147 @@ lab string/token/end-again
 
 
 
+var _total
+
+; ( *str -- int )
+lab string/to-int
+    lit 0 
+    stv _total
+lab string/to-int/loop
+    dup
+    lda
+
+    ; check termi
+    dup
+    lit 0
+    equ
+    jcn string/to-int/done
+
+    ; conv
+    lit 48
+    sub
+    ldv _total
+    lit 10
+    mul
+    add
+    stv _total
+
+    inc
+    jmp string/to-int/loop
+
+lab string/to-int/done
+    pop
+    ldv _total
+    ret
+    
+
+
+
+var _digits
+var _str
+
+; ( int -- str* )
+lab string/from-int
+    dup
+    stv _total
+
+    dup
+    lit 0
+    equ
+    jcn string/from-int/zero
+
+    lit 0
+    stv _digits
+
+    ; count the number of digits
+lab string/from-int/digit-loop
+    ; check zero
+    dup
+    lit 0
+    equ
+    jcn string/from-int/digit-done
+
+    ; next place value
+    lit 10
+    div
+
+    ; count digit
+    ldv _digits
+    inc
+    stv _digits
+
+    jmp string/from-int/digit-loop
+
+lab string/from-int/digit-done
+    pop
+
+    ; allocate string
+    ldv _digits
+    inc
+    jsr heap/new
+    dup
+    
+    ; compute send of string
+    ldv _digits
+    add
+    lit 1
+    sub
+    stv _str
+
+lab string/from-int/loop
+    ; check zero
+    ldv _total
+    lit 0
+    equ
+    jcn string/from-int/done
+
+    ; digit extration
+    ldv _total
+    dup
+    lit 10
+    div
+    dup
+    stv _total
+    lit 10
+    mul
+    sub
+
+    ; convert
+    lit 48
+    add
+
+    ; write into string
+    ldv _str
+    sta
+
+    ; inc ptr
+    ldv _str
+    lit 1
+    sub
+    stv _str
+
+    jmp string/from-int/loop
+
+lab string/from-int/done
+    ret
+
+lab string/from-int/zero
+    pop
+    
+    lit 2
+    jsr heap/new
+    dup
+    str "0"
+    ret
+
+
+
+    
+
+
+     
+
+
+
+
 
