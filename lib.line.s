@@ -13,8 +13,14 @@ lab line-resume
     stv _limit
     stv _buf
 
+    ; print buffer
     ldv _buf
     jsr string/print
+
+    ; read edit index from buffer
+    ldv _buf
+    jsr string/len
+    stv _n
 
     jmp line/loop
 
