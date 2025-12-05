@@ -1,23 +1,23 @@
 
 
 
-var _n
-var _src
-var _dst
+var _k
+var _addr
+var _buf
 var _tmp
 
 
 ; ( addr* buf* n -- )
 lab disk/write
-    stv _n
-    stv _src
+    stv _k
+    stv _buf
     stv _tmp
 
     ; copy quad word ptr
     lit 4
     jsr heap/new
     dup
-    stv _dst
+    stv _addr
 
     ldv _tmp
     lit 4
@@ -25,36 +25,36 @@ lab disk/write
 
 lab disk/write/loop
     ; check loop
-    ldv _n
+    ldv _k
     lit 0
     equ
     jcn disk/write/done
 
     ;dec n
-    ldv _n
+    ldv _k
     lit 1
     sub
-    stv _n
+    stv _k
 
     ;transfer
-    ldv _src
+    ldv _buf
     lda
-    ldv _dst
+    ldv _addr
     swp
     s03 ; fs_write
 
     ; incs
-    ldv _src
+    ldv _buf
     inc
-    stv _src
+    stv _buf
 
-    ldv _dst
+    ldv _addr
     s16
 
     jmp disk/write/loop
 
 lab disk/write/done
-    ldv _dst
+    ldv _addr
     jsr heap/void
 
     ret
