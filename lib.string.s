@@ -248,9 +248,38 @@ lab string/from-int/zero
 
     
 
+; ( int -- ) IO
+lab string/print-int
+    ; 100s place
+    dup
+    lit 100
+    div
+        dup
+        lit 48
+        add
+        out
+    lit 100
+    mul
+    sub
 
-     
+    ; 10s place
+    dup
+    lit 10
+    div
+        dup
+        lit 48
+        add
+        out
+    lit 10
+    mul
+    sub
 
+    ; 1s place
+    lit 48
+    add
+    out
+
+    ret
 
 
 
