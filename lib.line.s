@@ -47,6 +47,13 @@ lab line/loop
     equ
     jcn line/backspace
 
+    ; translate tabs
+    dup
+    lit 9
+    equ
+    jcn line/tab
+
+    ; filter control characters
     dup
     lit 32
     lth
@@ -59,6 +66,37 @@ lab line/loop
     equ
     jcn line/bound
 
+    jsr line/type
+    jmp line/loop
+
+; skip control characters
+lab line/control
+    pop
+    jmp line/loop
+
+lab line/bound
+    pop
+    jmp line/loop
+
+lab line/tab
+    pop
+
+    ; one tab -> four spaces
+    lit 32
+    lit 32
+    lit 32
+    lit 32
+
+    jsr line/type
+    jsr line/type
+    jsr line/type
+    jsr line/type
+
+    jmp line/loop
+
+
+; ( char -- )
+lab line/type
     ;echo
     dup
     out
@@ -71,17 +109,8 @@ lab line/loop
     ldv _n
     inc
     stv _n
+    ret
 
-    jmp line/loop
-
-;skip control characters
-lab line/control
-    pop
-    jmp line/loop
-
-lab line/bound
-    pop
-    jmp line/loop
 
 lab line/backspace
     ; key code don't care
