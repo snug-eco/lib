@@ -188,7 +188,7 @@ lab string/from-int/digit-done
     ; allocate string
     ldv _digits
     inc
-    jsr heap/new
+    jsr sys/heap/alloc
     dup
     
     ; compute send of string
@@ -239,7 +239,7 @@ lab string/from-int/zero
     pop
     
     lit 2
-    jsr heap/new
+    jsr sys/heap/alloc
     dup
     str "0"
     ret
