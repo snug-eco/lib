@@ -9,7 +9,7 @@ var _arg_ptr
 lab args/init
     ; open args file
     lit 4    
-    jsr heap/new
+    jsr sys/heap/alloc
 
     ; name
     dup
@@ -28,7 +28,7 @@ lab args/init
     ldv _args_iter
 
     ; clean up name
-    jsr heap/void
+    jsr sys/heap/free
 
     ; loop will iterate read blocks,
     ; till unread one if found
