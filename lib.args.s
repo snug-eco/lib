@@ -4,11 +4,12 @@ var _args_iter
 var _args_inited
 var _arg_len
 var _arg_ptr
+var _arg_out
 
 ; ( -- )
 lab args/init
     ; open args file
-    lit 4    
+    lit 100
     jsr sys/heap/alloc
 
     ; name
@@ -25,7 +26,7 @@ lab args/init
     dup
     jsr sys/file/seek
     jsr sys/file/open
-    ldv _args_iter
+    stv _args_iter
 
     ; clean up name
     jsr sys/heap/free
@@ -116,7 +117,9 @@ lab args/get/inited
     ldv _arg_len
     inc ;termi
     jsr sys/heap/alloc
+    dup
     stv _arg_ptr
+    stv _arg_out
 
     ; skip to content
     ldv _args_iter
@@ -155,6 +158,8 @@ lab args/get/done
     lit 0
     ldv _arg_ptr
     sta ; write terminator
+
+    ldv _arg_out
     ret
 
 lab args/get/bound
