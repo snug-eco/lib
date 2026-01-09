@@ -7,11 +7,6 @@ var _arg_ptr
 
 ; ( -- )
 lab args/init
-    ; args file iterator
-    lit 4
-    jsr heap/new
-    stv _args_iter
-
     ; open args file
     lit 4    
     jsr heap/new
@@ -22,31 +17,25 @@ lab args/init
 
     ; check exists
     dup
-    s04 ; fs_exists
-    lit 0
-    equ
+    jsr sys/file/check
+    not
     jcn args/init/error
 
-    ; seek
+    ; open
     dup
+    jsr sys/file/seek
+    jsr sys/file/open
     ldv _args_iter
-    swp
-    s05 ; fs_seek
 
     ; clean up name
     jsr heap/void
-
-    ; open file
-    ldv _args_iter
-    s06 ; fs_open
-
 
     ; loop will iterate read blocks,
     ; till unread one if found
 lab args/init/loop
     ; switch flag 
     ldv _args_iter
-    s02 ; disk read 
+    jsr sys/disk/read
     
     ; 0x00 end of argument stream
     dup
@@ -74,7 +63,8 @@ lab args/init/done
     ret
 
 lab args/init/error
-    lit 0
+    lit 100
+    jsr sys/heap/alloc
     dup
     str "args error: args file not found"
     jsr string/print
@@ -85,33 +75,16 @@ lab args/init/error
 
 ; ( -- )
 lab args/next
-    ; skip flag
-    ldv _args_iter
-    jsr quad/inc
 
     ; length
     ldv _args_iter
-    s02
+    inc ;skip flag
+    jsr sys/disk/read
 
-lab args/next/loop
-    ; check exit
-    dup
-    lit 0
-    equ
-    jcn args/next/done
-
-    ; dec count
-    lit 1
-    sub
-
-    ; inc iter
+    ; advance iterator
     ldv _args_iter
-    jsr quad/inc
-
-    jmp args/next/loop
-
-lab args/next/done
-    pop
+    add
+    stv _args_iter
     ret
 
 
@@ -128,30 +101,28 @@ lab args/get/inited
     
     ; check flag
     ldv _args_iter
-    s02
+    jsr sys/disk/read
     lit 0
     equ
     jcn args/get/bound
 
-    ; skip flag
-    ldv _args_iter
-    jsr quad/inc
-
     ; length
     ldv _args_iter
-    s02
-    dup
+    inc ;skip flag
+    jsr sys/disk/read
     stv _arg_len
 
     ; output allocate
-    inc
-    jsr heap/new
-    dup
+    ldv _arg_len
+    inc ;termi
+    jsr sys/heap/alloc
     stv _arg_ptr
 
-    ; skip length
+    ; skip to content
     ldv _args_iter
-    jsr quad/inc
+    lit 2
+    add
+    stv _args_iter
 
 lab args/get/loop
     ; check exit
@@ -166,31 +137,28 @@ lab args/get/loop
     sub
     stv _arg_len
 
-    ; transit character
+    ; copy character
     ldv _args_iter
-    s02
+        dup
+        inc
+        stv _args_iter
+    jsr sys/disk/read
     ldv _arg_ptr 
+        dup
+        inc
+        stv _arg_ptr
     sta
-
-    ; inc iter
-    ldv _args_iter
-    jsr quad/inc
-
-    ; inc ptr
-    ldv _arg_ptr
-    inc
-    stv _arg_ptr
 
     jmp args/get/loop
 
 lab args/get/done
     lit 0
     ldv _arg_ptr
-    sta
+    sta ; write terminator
     ret
 
 lab args/get/bound
-    lit 0
+    lit 0 ; null ptr
     ret
 
     
