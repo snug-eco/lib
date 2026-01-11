@@ -247,9 +247,27 @@ lab string/from-int/zero
 
 
     
+var _1000
 
 ; ( int -- ) IO
-lab string/print-int
+lab string/print-int-thou
+    lit 250
+    lit 2 ;*4
+    shl
+    stv _1000
+
+    ; 1000s place
+    dup
+    ldv _1000
+    div
+        dup
+        lit 48
+        add
+        out
+    ldv _1000
+    mul
+    sub
+
     ; 100s place
     dup
     lit 100
