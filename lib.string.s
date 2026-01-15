@@ -49,6 +49,44 @@ lab string/len/done
     ret
 
 
+; (*a *b -- bool)
+var _a
+var _b
+lab string/cmp
+    stv _b
+    stv _a
+
+lab string/cmp/loop
+    ldv _a
+        dup
+        inc
+        stv _a
+    lda
+        dup
+        not
+        jcn string/cmp/good
+
+    ldv _b
+        dup
+        inc
+        stv _b
+    lda
+        dup
+        not
+        jcn string/cmp/good
+    
+    neq
+    jcn string/cmp/bad
+    jmp string/cmp/loop
+
+lab string/cmp/good
+    lit 1
+    ret
+lab string/cmp/bad
+    lit 0
+    ret
+    
+
 
 
 var _delim
