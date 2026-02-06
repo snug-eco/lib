@@ -57,26 +57,32 @@ lab string/cmp
     stv _a
 
 lab string/cmp/loop
+    ; check terminate
     ldv _a
-        dup
-        inc
-        stv _a
-    lda
-        dup
+        lda
         not
-        jcn string/cmp/good
-
     ldv _b
-        dup
-        inc
-        stv _b
-    lda
-        dup
+        lda
         not
-        jcn string/cmp/good
-    
+    aor
+    jcn string/cmp/good
+
+    ;check neq
+    ldv _a
+        lda
+    ldv _b
+        lda
     neq
     jcn string/cmp/bad
+
+    ;postinc
+    ldv _a
+        inc
+        stv _a
+    ldv _b
+        inc
+        stv _b
+    
     jmp string/cmp/loop
 
 lab string/cmp/good
